@@ -38,3 +38,9 @@ export interface PortfolioApiResponse {
   data: SectorSummary[];
   message?: string;
 }
+
+export interface PortfolioResult {
+  sectors: SectorSummary[];
+  stale: boolean;
+  cachedAt: Date | null;
+}

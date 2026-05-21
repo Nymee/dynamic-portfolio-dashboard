@@ -43,7 +43,10 @@ function SummaryCard({
 }
 
 export default async function DashboardPage() {
-  const sectors = await portfolioRepository.getSectors().catch(() => []);
+  const { sectors, stale, cachedAt } = await portfolioRepository
+    .getSectors()
+    .catch(() => ({ sectors: [], stale: false, cachedAt: null }));
+
   const fetchedAt = new Date().toLocaleTimeString("en-IN");
 
   const totalInvestment = sectors.reduce((s, sec) => s + sec.totalInvestment, 0);
@@ -68,6 +71,17 @@ export default async function DashboardPage() {
       </header>
 
       <main className="mx-auto max-w-7xl space-y-8 px-6 py-8">
+        {stale && cachedAt && (
+          <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <span className="mt-0.5 text-base">⚠</span>
+            <span>
+              Live data unavailable — showing cached snapshot from{" "}
+              <strong>{cachedAt.toLocaleTimeString("en-IN")}</strong>.
+              Values may not reflect current market prices.
+            </span>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <SummaryCard label="Total Investment" value={totalInvestment} />
           <SummaryCard label="Present Value" value={totalValue} />
