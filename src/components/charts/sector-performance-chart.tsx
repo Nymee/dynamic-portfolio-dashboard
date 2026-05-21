@@ -42,7 +42,7 @@ export function SectorPerformanceChart({ data }: Props) {
           width={40}
         />
         <Tooltip
-          formatter={(v: number) => [`${v.toFixed(2)}%`, "Gain / Loss"]}
+          formatter={(v) => [`${(v as number).toFixed(2)}%`, "Gain / Loss"]}
           contentStyle={darkTooltip}
         />
         <ReferenceLine y={0} stroke="rgba(255,164,182,0.15)" strokeWidth={1} />

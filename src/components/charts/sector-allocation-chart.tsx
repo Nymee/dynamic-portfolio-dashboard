@@ -45,7 +45,7 @@ export function SectorAllocationChart({ data }: Props) {
           ))}
         </Pie>
         <Tooltip
-          formatter={(v: number) => [`${v.toFixed(1)}%`, "Weight"]}
+          formatter={(v) => [`${(v as number).toFixed(1)}%`, "Weight"]}
           contentStyle={darkTooltip}
         />
         <Legend
