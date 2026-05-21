@@ -3,9 +3,10 @@ import { getStockQuote } from "../repositories/finance.repository";
 import { EnrichedPortfolioHolding, SectorSummary } from "../types/portfolio.types";
 
 export async function getEnrichedPortfolio(): Promise<EnrichedPortfolioHolding[]> {
-  const enriched = await Promise.all(
+  const results = await Promise.all(
     mockPortfolio.map(async (holding) => {
       const quote = await getStockQuote(holding.symbol);
+      if (!quote) return null;
 
       const investment = holding.purchasePrice * holding.quantity;
       const presentValue = quote.currentPrice * holding.quantity;
@@ -15,6 +16,8 @@ export async function getEnrichedPortfolio(): Promise<EnrichedPortfolioHolding[]
       return { ...holding, quote, investment, presentValue, gainLoss, gainLossPercent, portfolioWeight: 0 };
     })
   );
+
+  const enriched = results.filter((h) => h !== null);
 
   const totalValue = enriched.reduce((sum, h) => sum + h.presentValue, 0);
 
